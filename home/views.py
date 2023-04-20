@@ -11,11 +11,28 @@ def home(request):
 
 
 def about(request):
-    return render(request, 'about.html')
+    views = {}
+    views['feedbacks'] = Feedback.objects.all
+    return render(request, 'about.html',views)
 
 
 def contact(request):
-    return render(request, 'contact.html')
+    views={}
+    views['informations'] = Information.objects.all
+    if request.method == "POST":
+        name = request.POST['name']
+        email = request.POST['email']
+        subject = request.POST['subject']
+        message = request.POST['message']
+        data = Contact.objects.create(
+            name=name,
+            email=email,
+            subject=subject,
+            message=message,
+        )
+        data.save()
+
+    return render(request, 'contact.html',views)
 
 
 def portfolio(request):
