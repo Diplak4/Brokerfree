@@ -1,5 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import *
+
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 # Create your views here.
 
 
@@ -45,4 +48,27 @@ def services(request):
 
 def price(request):
     return render(request, 'price.html')
+
+
+
+
+
+def signup(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        if not User.objects.filter(username=username).exists():
+            # Create a new user with the given username and password
+            user = User.objects.create_user(username=username, password=password)
+            # Authenticate the user and log them in
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            # Redirect to the home page or wherever you want to send the user
+            return redirect('home')
+        else:
+            # If the username is already taken, return an error message
+            return render(request, 'signup.html', {'error': 'Username already taken.'})
+    else:
+        # If the request is not a POST request, just render the empty form
+        return render(request, 'signup.html')
 
