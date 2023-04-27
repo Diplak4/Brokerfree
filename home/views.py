@@ -51,8 +51,6 @@ def price(request):
 
 
 
-
-
 def signup(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -63,8 +61,8 @@ def signup(request):
             # Authenticate the user and log them in
             user = authenticate(username=username, password=password)
             login(request, user)
-            # Redirect to the home page or wherever you want to send the user
-            return redirect('home')
+            # Redirect to the login page
+            return redirect('login')
         else:
             # If the username is already taken, return an error message
             return render(request, 'signup.html', {'error': 'Username already taken.'})
@@ -72,3 +70,19 @@ def signup(request):
         # If the request is not a POST request, just render the empty form
         return render(request, 'signup.html')
 
+
+def login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            # Redirect to the home page
+            return redirect('home')
+        else:
+            # If the username and password don't match, return an error message
+            return render(request, 'login.html', {'error': 'Invalid username or password.'})
+    else:
+        # If the request is not a POST request, just render the empty form
+        return render(request, 'login.html')

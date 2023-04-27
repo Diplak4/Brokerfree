@@ -41,3 +41,19 @@ class Information(models.Model):
 
     def __str__(self):
         return self.address1
+
+
+class Signup(models.Model):
+    username= models.CharField(max_length=100)
+    password = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.username
+
+
+class Login(models.Model):
+    username = models.CharField(max_length=100)
+    password = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.username
