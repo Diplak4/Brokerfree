@@ -50,39 +50,33 @@ def price(request):
     return render(request, 'price.html')
 
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login as auth_login, authenticate
+
+
 
 def signup(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        if not User.objects.filter(username=username).exists():
-            # Create a new user with the given username and password
-            user = User.objects.create_user(username=username, password=password)
-            # Authenticate the user and log them in
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            # Redirect to the login page
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            auth_login(request, user)
             return redirect('login')
-        else:
-            # If the username is already taken, return an error message
-            return render(request, 'signup.html', {'error': 'Username already taken.'})
     else:
-        # If the request is not a POST request, just render the empty form
-        return render(request, 'signup.html')
+        form = UserCreationForm()
+    return render(request, 'signup.html', {'form': form})
 
 
 def login(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            # Redirect to the home page
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            auth_login(request, user)
             return redirect('home')
-        else:
-            # If the username and password don't match, return an error message
-            return render(request, 'login.html', {'error': 'Invalid username or password.'})
     else:
-        # If the request is not a POST request, just render the empty form
-        return render(request, 'login.html')
+        form = AuthenticationForm()
+    return render(request, 'login.html', {'form': form})
+
+
