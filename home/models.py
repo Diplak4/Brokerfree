@@ -43,3 +43,11 @@ class Information(models.Model):
         return self.address1
 
 
+class Signup(models.Model):
+    name = models.CharField(max_length=200)
+    email = models.CharField(max_length=300)
+    password = models.CharField(max_length=40)
+    confirm_password = models.EmailField(max_length=500)
+
+    def __str__(self):
+        return self.name

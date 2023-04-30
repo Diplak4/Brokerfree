@@ -68,7 +68,8 @@
 	<div class="signup-container">
 	  <section class="signup-section">
 	    <h2>Create an account</h2>
-	    <form class="signup-form">
+	    <form class="signup-form" method="POST">
+			{% csrf_token %}
 	      <div class="form-group">
 	        <label for="username">Username:</label>
 	        <input type="text" id="username" name="username" required>
