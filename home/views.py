@@ -1,7 +1,9 @@
+from django.views.generic import View
 from django.shortcuts import render,redirect
 from .models import *
-
+from django.contrib import messages
 from django.contrib.auth.models import User
+
 from django.contrib.auth import authenticate, login
 # Create your views here.
 
@@ -52,10 +54,6 @@ def price(request):
     return render(request, 'price.html')
 
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import login as auth_login, authenticate
-
 
 def signup(request):
     if request.method == 'POST':
@@ -63,25 +61,25 @@ def signup(request):
         email = request.POST['email']
         password = request.POST['password']
         confirm_password = request.POST['confirm-password']
-        data= Signup.objects.create(
-            name= name,
-            email=email,
-            password=password,
-            confirm_password=confirm_password,
 
-        )
-        data.save()
+        if password == confirm_password:
+            if User.objects.filter(username=name).exists():
+                messages.error(request, 'The username is already taken')
+                return redirect('/signup')
+            elif User.objects.filter(email=email).exists():
+                messages.error(request, 'The email is already used')
+                return redirect('/signup')
+            else:
+                data= Signup.objects.create(
+                  name= name,
+                  email=email,
+                  password=password,
+                  confirm_password=confirm_password
+                 )
+                data.save()
+        else:
+            messages.error(request, 'The password does not match!')
+            return redirect('/signup')
     return render(request, 'signup.html')
-
-# def login(request):
-#     if request.method == 'POST':
-#         form = AuthenticationForm(data=request.POST)
-#         if form.is_valid():
-#             user = form.get_user()
-#             auth_login(request, user)
-#             return redirect('home')
-#     else:
-#         form = AuthenticationForm()
-#     return render(request, 'login.html', {'form': form})
 
 

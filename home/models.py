@@ -16,6 +16,7 @@ class Contact(models.Model):
 class Services(models.Model):
     title = models.CharField(max_length=300)
     logo = models.CharField(max_length=300)
+    url= models.URLField(max_length=500, blank= True)
     description = models.TextField()
 
     def __str__(self):
