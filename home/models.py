@@ -52,3 +52,10 @@ class Signup(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Search(models.Model):
+    name = models.CharField(max_length=300)
+
+    def __str__(self):
+        return self.name
