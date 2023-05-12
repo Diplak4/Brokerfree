@@ -59,3 +59,12 @@ class Search(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Post(models.Model):
+    name = models.CharField(max_length=300)
+    image= models.ImageField(upload_to='media')
+    location_name= models.CharField(max_length=300)
+
+    def __str__(self):
+        return self.name
